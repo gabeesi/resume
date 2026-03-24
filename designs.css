@@ -142,6 +142,7 @@ section{
     opacity: 1;
 }
 
+
 /* Botões */
 .carousel-btn {
     position: absolute;
@@ -166,6 +167,20 @@ section{
 
 .carousel-btn:hover {
     background: #e66aff4d;
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 15px;
+    }
+
+    .carousel-container {
+        height: 220px;
+    }
+
+    .contact-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 

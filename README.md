@@ -1,31 +1,9 @@
 # 🌐 Gabriela Nunes | Frontend Developer
 
-Welcome to my portfolio!
+## Portfolio
 
-I am a Frontend Developer from Brazil, focused on building clean, responsive and user-friendly web interfaces.
+A curated collection of projects combining web development and visual design, focused on delivering clear, functional, and engaging digital experiences.
 
----
+My work spans civil engineering solutions, branding, and digital marketing content, highlighting both technical skills and creative problem-solving.
 
-## 🚀 About Me
-
-- 💻 Frontend Developer
-- 🌎 Based in Brazil
-- 📚 Currently learning: React & APIs
-- 🎯 Looking for international remote opportunities
-
----
-
-## 🛠️ Technologies
-
-- HTML
-- CSS
-- JavaScript
-- Git & GitHub
-
----
-
-## 📫 Contact
-
-- GitHub: https://github.com/gabeesi  
-- LinkedIn: https://www.linkedin.com/in/gabrielanuness/  
-- Email: gabeesi.kg@gmail.com  
+Built with HTML, CSS, and JavaScript.

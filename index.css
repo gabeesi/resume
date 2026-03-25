@@ -113,7 +113,7 @@ section{
   border: 1px solid #2a2a2a;
   text-align: center;
   width: 100%;
-  max-width: 220px;
+  max-width: 100%;
 }
 
 .contact-container p:hover {

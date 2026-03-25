@@ -26,6 +26,12 @@ h1{
   margin-bottom:10px;
 }
 
+h2{
+  font-size:38px;
+  margin-bottom:0px;
+  margin-top: 0px;
+  text-align: center;
+}
 section{
   padding:60px 20px;
 }

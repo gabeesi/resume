@@ -13,8 +13,10 @@
   <p>Interactive mini-applications built to practice logic and problem solving.</p>
 </header>
 <hr>
-<section class="proje-section">
-<div class="projects">
+<section class="projects-section">
+  <div class="projects-layout">
+
+  <div class="projects">
 
 <!--Calculadora de IMC-->
     <div class="card">
@@ -79,7 +81,8 @@
       <button class="btn" onclick="openProject('movie')">Try it</button>
     </div>
 
-  </div>
+    </div>
+    </div>
 </section>
 
 <hr>
@@ -94,12 +97,15 @@
   </div>
 </section>
 
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <div id="project-viewer"></div>
+  </div>
+</div>
+
 <footer>
   © 2026 Gabriela Costa
 </footer>
-
-<!-- Área dinâmica -->
-<div id="project-viewer"></div>
 
 <script src="projects.js"></script>
 </body>

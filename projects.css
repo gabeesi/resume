@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body{
   font-family:Arial, Helvetica, sans-serif;
   margin:0;
@@ -80,10 +84,14 @@ section{
   box-shadow: 0 6px 20px #e66aff4d;
 }
 
+.projects-layout {
+  display: block;
+}
+
 #project-viewer {
-  display: none;
   margin: 40px auto;
-  max-width: 500px;
+  width: 100%;
+  max-width: 100%;
   background: #1b1b1b;
   padding: 25px;
   border-radius: 16px;
@@ -95,6 +103,7 @@ section{
 
 #project-viewer input {
   width: 100%;
+  max-width: 100%;
   padding: 10px;
   margin: 8px 0;
   border-radius: 8px;
@@ -103,6 +112,7 @@ section{
 }
 
 #project-viewer p {
+  white-space: pre-line;
   margin-top: 10px;
   font-weight: 500;
   color: #c36aff;
@@ -135,6 +145,40 @@ section{
   transform: scale(1.2);
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #1b1b1b;
+  padding: 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  animation: fadeInScale 0.3s ease;
+}
+
+/* animação */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 .contact-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -175,4 +219,10 @@ footer{
   text-align:center;
   padding:30px 10px;
   color:#aaa;
+}
+
+@media (max-width: 768px) {
+  .projects-layout {
+    grid-template-columns: 1fr;
+  }
 }

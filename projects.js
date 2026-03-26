@@ -1,6 +1,8 @@
 function openProject(project) {
   const viewer = document.getElementById("project-viewer");
-  viewer.style.display = "block";
+  const modal = document.getElementById("modal");
+
+  modal.style.display = "flex";
 
   // BMI
   if (project === "bmi") {
@@ -103,7 +105,7 @@ else if (project === "movie"){
     viewer.innerHTML = `
     <button class="btn" onclick="closeViewer()">✕</button>
     <h3>Favorite Movies</h3>
-    <input type="text" id="movieInput" placeholder="Enter movie name"onkeypress="if(event.key==='Enter') addMovie()">
+    <input type="text" id="movieInput" placeholder="Enter movie name" onkeypress="if(event.key==='Enter') addMovie()">
     <button class="btn" onclick="addMovie()">Add</button>
     <ul id="movieList"></ul>
   `;
@@ -258,6 +260,12 @@ function addMovie() {
 
 // Close
 function closeViewer() {
-  document.getElementById("project-viewer").style.display = "none";
+  document.getElementById("modal").style.display = "none";
 }
 
+window.onclick = function(event) {
+  const modal = document.getElementById("modal");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+}

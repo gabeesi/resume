@@ -179,6 +179,23 @@ section{
     transform: scale(1);
   }
 }
+
+#financeList li {
+  background: #2a2a2a;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.a1 {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #c36aff;
+  font-weight: 500;
+}
+
 .contact-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -215,14 +232,14 @@ section{
   letter-spacing: 1px;
 }
 
-footer{
-  text-align:center;
-  padding:30px 10px;
-  color:#aaa;
-}
-
 @media (max-width: 768px) {
   .projects-layout {
     grid-template-columns: 1fr;
   }
+}
+
+footer{
+  text-align:center;
+  padding:30px 10px;
+  color:#aaa;
 }

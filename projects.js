@@ -111,6 +111,92 @@ else if (project === "movie"){
   `;
 }
 
+//TO-DO LIST
+else if (project === "todo") {
+  viewer.innerHTML = `
+    <button class="btn" onclick="closeViewer()">✕</button>
+    <h3>To-Do List</h3>
+
+    <input type="text" id="taskInput" placeholder="New task" onkeypress="if(event.key==='Enter') addTask()">
+    <button class="btn" onclick="addTask()">Add</button>
+
+    <ul id="taskList"></ul>
+  `;
+
+  loadTasks();
+}
+
+//POMODORO
+else if (project === "pomodoro") {
+  time = 1500;
+  viewer.innerHTML = `
+    <button class="btn" onclick="closeViewer()">✕</button>
+    <h3>Pomodoro Timer</h3>
+
+    <p id="timer">25:00</p>
+
+      <button class="btn" onclick="startPomodoro()">Start</button>
+      <button class="btn" onclick="pausePomodoro()">Pause</button>
+      <button class="btn" onclick="resetPomodoro()">Reset</button>
+  `;
+}
+
+//QUIZ
+else if (project === "quiz") {
+  viewer.innerHTML = `
+    <button class="btn" onclick="closeViewer()">✕</button>
+    <h3>Quiz</h3>
+
+      <p id="progress"></p>
+      <p id="question"></p>
+    <div id="answers"></div>
+      <p id="feedback"></p>
+      <p id="score"></p>
+  `;
+
+  startQuiz();
+}
+
+//PASSWORD GENERATOR
+else if (project === "password") {
+  viewer.innerHTML = `
+    <button class="btn" onclick="closeViewer()">✕</button>
+    <h3>Password Generator</h3>
+
+    <input type="number" id="length" placeholder="Length (ex: 8)">
+
+      <label><input type="checkbox" id="upper" checked> Uppercase</label>
+      <label><input type="checkbox" id="lower" checked> Lowercase</label>
+      <label><input type="checkbox" id="numbers" checked> Numbers</label>
+      <label><input type="checkbox" id="symbols"> Symbols</label>
+
+    <button class="btn" onclick="generatePassword()">Generate</button>
+    <button class="btn" onclick="copyPassword()">Copy</button>
+
+      <p id="password-result"></p>
+
+  `;
+}
+
+//CASH
+else if (project === "finance") {
+  viewer.innerHTML = `
+    <button class="btn" onclick="closeViewer()">✕</button>
+    <h3>Finance Tracker</h3>
+
+    <input type="text" id="desc" placeholder="Description">
+    <input type="number" id="amount" placeholder="Value (+ income / - expense)">
+
+    <button class="btn" onclick="addTransaction()">Add</button>
+
+    <h4 id="balance">Balance: $0</h4>
+    <p id="income">Income: $0</p>
+    <p id="expense">Expenses: $0</p>
+
+    <ul id="financeList"></ul>
+  `;
+
+  loadTransactions();
 }
 
 
@@ -255,8 +341,320 @@ function addMovie() {
 
     input.value = "";
   }
+}
+
+//TO-DO LIST
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const task = input.value.trim();
+
+  if (task !== "") {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.push(task);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    input.value = "";
+    loadTasks();
+  }
+}
+
+function loadTasks() {
+  const list = document.getElementById("taskList");
+  if (!list) return;
+
+  list.innerHTML = "";
+  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  tasks.forEach((task, index) => {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      ${task}
+      <button class="delete-btn" onclick="removeTask(${index})">🗑️</button>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+function removeTask(index) {
+  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  tasks.splice(index, 1);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  loadTasks();
+}
+
+//POMODORO
+let time = 1500; // 25 minutos
+let timerInterval = null;
+
+function updateDisplay() {
+  let min = Math.floor(time / 60);
+  let sec = time % 60;
+
+  document.getElementById("timer").innerText =
+    `${min}:${sec < 10 ? "0" + sec : sec}`;
+}
+
+function startPomodoro() {
+  if (timerInterval) return; // evita múltiplos timers
+
+  timerInterval = setInterval(() => {
+    time--;
+    updateDisplay();
+
+    if (time <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      alert("⏰ Time's up!");
+    }
+  }, 1000);
+}
+
+function pausePomodoro() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function resetPomodoro() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  time = 1500;
+  updateDisplay();
+}
+
+//QUIZ
+const questions = [
+  {
+    q: "What does HTML stand for?",
+    a: ["Hyper Trainer Marking Language", "Hyper Text Markup Language", "Hyper Text Marketing Language"],
+    correct: 1
+  },
+  {
+    q: "Which language runs in the browser?",
+    a: ["Python", "Java", "JavaScript"],
+    correct: 2
+  },
+  {
+    q: "What is CSS used for?",
+    a: ["Structure", "Styling", "Database"],
+    correct: 1
+  },
+  {
+    q: "Which symbol is used for comments in JS?",
+    a: ["//", "<!-- -->", "#"],
+    correct: 0
+  }
+];
+
+let current = 0;
+let score = 0;
+
+function startQuiz() {
+  current = 0;
+  score = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = questions[current];
+
+  document.getElementById("progress").innerText =
+    `Question ${current + 1} of ${questions.length}`;
+
+  document.getElementById("question").innerText = q.q;
+
+  const answersDiv = document.getElementById("answers");
+  answersDiv.innerHTML = "";
+
+  document.getElementById("feedback").innerText = "";
+
+  q.a.forEach((ans, index) => {
+    const btn = document.createElement("button");
+    btn.className = "btn";
+    btn.innerText = ans;
+
+    btn.onclick = () => checkAnswer(index, btn);
+
+    answersDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(index, btnClicked) {
+  const correctIndex = questions[current].correct;
+  const buttons = document.querySelectorAll("#answers .btn");
+
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+
+    if (i === correctIndex) {
+      btn.style.background = "green";
+    } else {
+      btn.style.background = "red";
+    }
+  });
+
+  if (index === correctIndex) {
+    score++;
+    document.getElementById("feedback").innerText = "✅ Correct!";
+  } else {
+    document.getElementById("feedback").innerText = "❌ Wrong!";
+  }
+
+  setTimeout(() => {
+    current++;
+
+    if (current < questions.length) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  }, 1000);
+}
+
+function showResult() {
+  document.getElementById("question").innerText = "Finished!";
+  document.getElementById("answers").innerHTML = "";
+  document.getElementById("feedback").innerText = "";
+
+  document.getElementById("score").innerText =
+    `Final Score: ${score} / ${questions.length}`;
+}
+
+//PASSWORD GENERATOR
+function generatePassword() {
+  const length = parseInt(document.getElementById("length").value);
+
+  const useUpper = document.getElementById("upper").checked;
+  const useLower = document.getElementById("lower").checked;
+  const useNumbers = document.getElementById("numbers").checked;
+  const useSymbols = document.getElementById("symbols").checked;
+
+  const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lower = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  const symbols = "!@#$%&*";
+
+  let chars = "";
+  let password = "";
+
+  if (useUpper) {
+    chars += upper;
+    password += upper[Math.floor(Math.random() * upper.length)];
+  }
+
+  if (useLower) {
+    chars += lower;
+    password += lower[Math.floor(Math.random() * lower.length)];
+  }
+
+  if (useNumbers) {
+    chars += numbers;
+    password += numbers[Math.floor(Math.random() * numbers.length)];
+  }
+
+  if (useSymbols) {
+    chars += symbols;
+    password += symbols[Math.floor(Math.random() * symbols.length)];
+  }
+
+  if (!length || chars === "") {
+    document.getElementById("password-result").innerText =
+      "⚠️ Choose options and length!";
+    return;
+  }
+
+  if (length < password.length) {
+  document.getElementById("password-result").innerText =
+    "⚠️ Increase length or reduce options!";
+  return;
+}
+  // completa o resto
+  for (let i = password.length; i < length; i++) {
+    password += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  // embaralha a senha
+  password = password.split('').sort(() => Math.random() - 0.5).join('');
+
+  const strength = checkStrength(password);
+
+  document.getElementById("password-result").innerText =
+    password + " (" + strength + ")";
+}
+
+
+//CASH
+function addTransaction() {
+  const desc = document.getElementById("desc").value.trim();
+  const amount = parseFloat(document.getElementById("amount").value);
+
+  if (desc && !isNaN(amount)) {
+    let data = JSON.parse(localStorage.getItem("finance")) || [];
+
+    data.push({ desc, amount });
+    localStorage.setItem("finance", JSON.stringify(data));
+
+    document.getElementById("desc").value = "";
+    document.getElementById("amount").value = "";
+
+    loadTransactions();
+  }
+}
+
+
+function loadTransactions() {
+  const list = document.getElementById("financeList");
+  const balanceEl = document.getElementById("balance");
+  const incomeEl = document.getElementById("income");
+  const expenseEl = document.getElementById("expense");
+
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  let data = JSON.parse(localStorage.getItem("finance")) || [];
+
+  let total = 0;
+  let income = 0;
+  let expense = 0;
+
+  data.forEach((item, index) => {
+    total += item.amount;
+
+    if (item.amount > 0) {
+      income += item.amount;
+    } else {
+      expense += item.amount;
+    }
+
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <span>${item.desc}</span>
+      <span style="color:${item.amount >= 0 ? "#4caf50" : "#ff4d4d"}">
+        $${item.amount}
+      </span>
+      <button class="delete-btn" onclick="removeTransaction(${index})">🗑️</button>
+    `;
+
+    list.appendChild(li);
+  });
+
+  balanceEl.innerText = "Balance: $" + total;
+  incomeEl.innerText = "Income: $" + income;
+  expenseEl.innerText = "Expenses: $" + Math.abs(expense);
+}
+
+function removeTransaction(index) {
+  let data = JSON.parse(localStorage.getItem("finance")) || [];
+  data.splice(index, 1);
+  localStorage.setItem("finance", JSON.stringify(data));
+  loadTransactions();
+}
 
 }
+
+
 
 // Close
 function closeViewer() {
@@ -269,3 +667,5 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
+
+

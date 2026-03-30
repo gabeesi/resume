@@ -164,17 +164,19 @@ else if (project === "password") {
     <h3>Password Generator</h3>
 
     <input type="number" id="length" placeholder="Length (ex: 8)">
-
+    <div class="options">
       <label><input type="checkbox" id="upper" checked> Uppercase</label>
       <label><input type="checkbox" id="lower" checked> Lowercase</label>
       <label><input type="checkbox" id="numbers" checked> Numbers</label>
       <label><input type="checkbox" id="symbols"> Symbols</label>
+    </div>
 
-    <button class="btn" onclick="generatePassword()">Generate</button>
-    <button class="btn" onclick="copyPassword()">Copy</button>
+    <div class="actions">
+      <button class="btn" onclick="generatePassword()">Generate</button>
+      <button class="btn" onclick="copyPassword()">Copy</button>
+    </div>
 
-      <p id="password-result"></p>
-
+    <p id="password-result"></p>
   `;
 }
 
@@ -199,7 +201,13 @@ else if (project === "finance") {
   loadTransactions();
 }
 
-
+window.onclick = function(event) {
+  const modal = document.getElementById("modal");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+}
+}
 // BMI
 function calcBMI() {
   const w = document.getElementById("weight").value;
@@ -238,9 +246,9 @@ function calcBasic() {
   if (!isNaN(n1) && !isNaN(n2)) {
     document.getElementById("calc-result").innerText =
       `Sum: ${n1 + n2}
-Subtraction: ${n1 - n2}
-Multiplication: ${n1 * n2}
-Division: ${n2 !== 0 ? (n1 / n2).toFixed(2) : "Invalid (division by zero)"}`;
+      Subtraction: ${n1 - n2}
+      Multiplication: ${n1 * n2}
+      Division: ${n2 !== 0 ? (n1 / n2).toFixed(2) : "Invalid (division by zero)"}`;
   }
 }
 
@@ -522,7 +530,12 @@ function showResult() {
 
 //PASSWORD GENERATOR
 function generatePassword() {
-  const length = parseInt(document.getElementById("length").value);
+  const lengthInput = document.getElementById("length");
+  const resultEl = document.getElementById("password-result");
+
+  if (!lengthInput || !resultEl) return;
+
+  const length = parseInt(lengthInput.value) || 8;
 
   const useUpper = document.getElementById("upper").checked;
   const useLower = document.getElementById("lower").checked;
@@ -537,51 +550,49 @@ function generatePassword() {
   let chars = "";
   let password = "";
 
-  if (useUpper) {
-    chars += upper;
-    password += upper[Math.floor(Math.random() * upper.length)];
-  }
-
-  if (useLower) {
-    chars += lower;
-    password += lower[Math.floor(Math.random() * lower.length)];
-  }
-
-  if (useNumbers) {
-    chars += numbers;
-    password += numbers[Math.floor(Math.random() * numbers.length)];
-  }
-
-  if (useSymbols) {
-    chars += symbols;
-    password += symbols[Math.floor(Math.random() * symbols.length)];
-  }
+  if (useUpper) chars += upper;
+  if (useLower) chars += lower;
+  if (useNumbers) chars += numbers;
+  if (useSymbols) chars += symbols;
 
   if (!length || chars === "") {
-    document.getElementById("password-result").innerText =
-      "⚠️ Choose options and length!";
+    resultEl.innerText = "⚠️ Choose options and length!";
     return;
   }
 
-  if (length < password.length) {
-  document.getElementById("password-result").innerText =
-    "⚠️ Increase length or reduce options!";
-  return;
-}
-  // completa o resto
-  for (let i = password.length; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     password += chars[Math.floor(Math.random() * chars.length)];
   }
 
-  // embaralha a senha
-  password = password.split('').sort(() => Math.random() - 0.5).join('');
-
   const strength = checkStrength(password);
 
-  document.getElementById("password-result").innerText =
-    password + " (" + strength + ")";
+  resultEl.innerText = `${password} (${strength})`;
 }
 
+function checkStrength(password) {
+  let strength = 0;
+
+  if (password.length >= 8) strength++;
+  if (/[A-Z]/.test(password)) strength++;
+  if (/[a-z]/.test(password)) strength++;
+  if (/[0-9]/.test(password)) strength++;
+  if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+  if (strength <= 2) return "Weak";
+  if (strength <= 4) return "Medium";
+  return "Strong";
+}
+
+function copyPassword() {
+  const text = document.getElementById("password-result").innerText;
+
+  if (!text) return;
+
+  const password = text.split(" ")[0];
+  navigator.clipboard.writeText(password);
+
+  alert("Copied!");
+}
 
 //CASH
 function addTransaction() {
@@ -600,7 +611,8 @@ function addTransaction() {
     loadTransactions();
   }
 }
-
+window.generatePassword = generatePassword;
+window.copyPassword = copyPassword;
 
 function loadTransactions() {
   const list = document.getElementById("financeList");
@@ -652,20 +664,9 @@ function removeTransaction(index) {
   loadTransactions();
 }
 
-}
-
-
-
 // Close
 function closeViewer() {
   document.getElementById("modal").style.display = "none";
-}
-
-window.onclick = function(event) {
-  const modal = document.getElementById("modal");
-  if (event.target === modal) {
-    modal.style.display = "none";
-  }
 }
 
 
